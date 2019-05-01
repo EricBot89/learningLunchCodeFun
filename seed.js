@@ -1,25 +1,11 @@
 // importing Bluebird promises so we can Promise.map
 const Promise = require('bluebird');
 // bring in the db and all the Models to seed
-const db = require('./db');
+const db = require('./models/db');
 const Puppy = require('./models/Puppy');
-const Park = require('./models/Park');
 const Food = require('./models/Food');
-const Location = require('./models/Location');
 
 // each of the following array will be iterated and Created
-const locationData = [
-  {
-    address: '11th Floor, 5 Hanover Square, NY'
-  },
-  {
-    address: '450 Flatbush Ave, Brooklyn'
-  },
-  {
-    address: 'Washington Square, NY'
-  },
-]
-
 const puppyData = [
   {
     firstName: 'Puppy',
@@ -76,18 +62,6 @@ const foodData = [
   },
 ]
 
-const parkData = [
-  {
-    name: 'Fullstack Park',
-  },
-  {
-    name: 'Prospect Park',
-  },
-  {
-    name: 'Washington Square Park',
-  },
-]
-
 
 // We will go through the Models one by one and create an instance
 // for each element in the array. Look below for a commented out version of how to do this in one slick nested Promise.
@@ -100,14 +74,6 @@ db.sync({ force: true })
 // here, we go through all the models one by one, create each
 // element from the seed arrays above, and log how many are created
 .then(() => {
-  return Promise.map(locationData, function(location) {
-    return Location.create(location);
-  })
-})
-.then(createdLocations => {
-  console.log(`${createdLocations.length} locations created`);
-})
-.then(() => {
   return Promise.map(puppyData, puppy => Puppy.create(puppy))
 })
 .then(createdPuppies => {
@@ -118,12 +84,6 @@ db.sync({ force: true })
 })
 .then(createdFoods => {
   console.log(`${createdFoods.length} foods created`);
-})
-.then(() => {
-  return Promise.map(parkData, park => Park.create(park))
-})
-.then(createdParks => {
-  console.log(`${createdParks.length} parks created`);
 })
 .then(() => {
   console.log('Seeded successfully');
